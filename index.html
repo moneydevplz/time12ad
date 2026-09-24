@@ -2,152 +2,132 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Time12 — Make Time True</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#18120E;--paper:#F7F3EE;--paper2:#EFE9E1;--orange:#FD7E14;--orange2:#E56A10;--peach:#FFF4E5;--green:#5F7A3A;--gold:#B08832;}
+:root{--ink:#1B1712;--mute:#6f655a;--o:#FD7E14;--glass:rgba(255,255,255,.34);--edge:rgba(255,255,255,.75);--ease:cubic-bezier(.16,1,.3,1)}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:#0c0a08;overflow:hidden;font-family:'DM Sans',sans-serif}
-#frame{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-#canvas{position:relative;width:100%;height:100vh;max-width:none;background:var(--paper);border-radius:0;overflow:hidden;box-shadow:none}
-#grain{position:absolute;inset:0;opacity:.05;pointer-events:none;background-image:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}
-.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;visibility:hidden;transition:opacity .6s ease}
-.scene.active{opacity:1;visibility:visible}
-.serif{font-family:'DM Serif Display',serif}
-.hand{font-family:'Caveat',cursive}
-h1{font-size:clamp(28px,6vw,64px);color:var(--ink)}
-p.sub{font-family:'Caveat',cursive;font-weight:700;font-size:clamp(18px,3vw,30px);color:var(--orange2);margin-top:6px}
-.paper{position:absolute;background:var(--peach);border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(24,18,14,.15);filter:url(#sketchy)}
-.note{position:absolute;width:13%;aspect-ratio:1;padding:1%;font-family:'Caveat',cursive;font-weight:700;font-size:1.1vw;color:var(--ink);border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(24,18,14,.18);filter:url(#sketchy);opacity:0;transform:scale(.4) rotate(0);display:flex;align-items:center;justify-content:center;text-align:center}
-.scene.active .note{animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards var(--d,0s)}
-@keyframes pop{to{opacity:1;transform:scale(1) rotate(var(--r,0deg))}}
-.icon{filter:url(#sketchy)}
-.stroke{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.draw{stroke-dasharray:400;stroke-dashoffset:400;animation:draw 1.3s ease forwards var(--dd,.2s)}
-@keyframes draw{to{stroke-dashoffset:0}}
-.card{width:19%;aspect-ratio:.8;background:var(--peach);border:2px solid var(--ink);box-shadow:3px 5px 0 rgba(24,18,14,.18);filter:url(#sketchy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transform:translateY(40px) rotate(var(--r,0deg));padding:1%}
-.scene.active .card{animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards var(--d,0s)}
-@keyframes rise{to{opacity:1;transform:translateY(0) rotate(var(--r,0deg))}}
-.row{display:flex;gap:2.2%;margin:5% auto 0;width:66%;justify-content:center}
-p.hand{text-align:center;width:100%}
-.card .lbl{font-family:'DM Sans';font-weight:700;font-size:1.3vw;color:var(--ink)}
-.person{position:absolute;background:var(--orange);border:2px solid var(--ink);border-radius:50% 50% 45% 45%;filter:url(#sketchy);opacity:0;transform:scale(.5)}
-.scene.active .person{animation:pop .5s ease forwards var(--d,0s)}
-#watermark{position:absolute;top:14px;left:18px;font-family:'DM Serif Display';font-size:1.4vw;color:var(--ink);opacity:.55;letter-spacing:.5px}
-.arrow{filter:url(#sketchy)}
-.hourhand,.minhand{transform-box:view-box;transform-origin:50px 50px}
-.scene.active .hourhand{animation:hourspin 2s linear .3s forwards}
-.scene.active .minhand{animation:minspin 2s linear .3s forwards}
-@keyframes hourspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes minspin{from{transform:rotate(0deg)}to{transform:rotate(4320deg)}}
+html,body{height:100%;overflow:hidden;background:#fbf4ec;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)}
+#stage{position:fixed;inset:0;overflow:hidden;background:linear-gradient(160deg,#fff8f0,#ffe9d2 55%,#ffd9b8)}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);will-change:transform;animation:drift 12s ease-in-out infinite alternate}
+.b1{width:46vmax;height:46vmax;left:-10vmax;top:-12vmax;background:#ffb066;opacity:.75}
+.b2{width:38vmax;height:38vmax;right:-8vmax;bottom:-10vmax;background:#ff8a3d;opacity:.55;animation-delay:-4s}
+.b3{width:30vmax;height:30vmax;left:40%;top:30%;background:#fff;opacity:.8;animation-delay:-8s}
+@keyframes drift{to{transform:translate3d(6vmax,4vmax,0) scale(1.15)}}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6vmin;opacity:0;visibility:hidden;filter:blur(14px);transform:scale(1.04);transition:opacity .7s var(--ease),filter .7s var(--ease),transform .7s var(--ease),visibility 0s .7s}
+.scene.on{opacity:1;visibility:visible;filter:none;transform:none;transition-delay:0s}
+h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,6.4vw,84px);line-height:1.05;letter-spacing:-.02em}
+h1 i{color:var(--o)}
+.sub{margin-top:2vmin;font-size:clamp(14px,1.8vw,22px);color:var(--mute);font-weight:500}
+.glass{background:var(--glass);border:1px solid var(--edge);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.9),inset 0 -8px 20px rgba(255,255,255,.18),0 18px 50px rgba(190,100,20,.16)}
+.r{opacity:0;transform:translateY(24px)}
+.on .r{animation:up 1s var(--ease) both;animation-delay:calc(var(--i,0)*.14s + .15s)}
+@keyframes up{to{opacity:1;transform:none}}
+/* chips */
+.chip{position:absolute;padding:1.1vmax 1.8vmax;border-radius:99px;font-weight:700;font-size:clamp(12px,1.4vw,18px);left:var(--x);top:var(--y);opacity:0}
+.on .chip{animation:chip 1s var(--ease) both,bob 5s ease-in-out infinite alternate;animation-delay:var(--d),calc(var(--d) + 1s)}
+@keyframes chip{from{opacity:0;transform:scale(.6) translateY(30px)}to{opacity:1;transform:rotate(var(--rot))}}
+@keyframes bob{to{translate:0 -14px}}
+/* clock */
+.clock{width:clamp(120px,22vmin,220px);aspect-ratio:1;border-radius:50%;position:relative;margin-bottom:5vmin}
+.clock i{position:absolute;left:50%;bottom:50%;width:3px;border-radius:3px;background:var(--ink);transform-origin:bottom center;transform:translateX(-50%) rotate(0)}
+.h{height:26%}.m{height:38%;background:var(--o)!important}
+.on .h{animation:spin 2.2s cubic-bezier(.6,0,.2,1) .3s forwards}
+.on .m{animation:spin 2.2s cubic-bezier(.6,0,.2,1) .3s forwards;--n:12}
+.clock b{position:absolute;inset:50% auto auto 50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:var(--ink)}
+@keyframes spin{to{transform:translateX(-50%) rotate(calc(var(--n,1)*360deg))}}
+/* cards */
+.row{display:flex;gap:2.4vmax;margin-top:6vmin;flex-wrap:wrap;justify-content:center}
+.card{width:clamp(110px,17vw,220px);aspect-ratio:.85;border-radius:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vmin;font-weight:700;font-size:clamp(14px,1.7vw,22px)}
+.card svg{width:38%;fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* team */
+.org{position:relative;width:min(560px,86vw);height:180px;margin-top:5vmin}
+.org svg{position:absolute;inset:0;width:100%;height:100%}
+.org path{fill:none;stroke:var(--o);stroke-width:2;stroke-linecap:round;stroke-dasharray:300;stroke-dashoffset:300;opacity:.7}
+.on .org path{animation:dr 1.2s var(--ease) forwards;animation-delay:calc(var(--i)*.1s + .6s)}
+@keyframes dr{to{stroke-dashoffset:0}}
+.dot{position:absolute;width:54px;height:54px;margin:-27px;border-radius:50%;opacity:0}
+.on .dot{animation:up .9s var(--ease) both;animation-delay:var(--d)}
+.hub{width:84px;height:84px;margin:-42px;border-radius:26%;object-fit:cover;background:#fff;box-shadow:0 0 0 6px rgba(253,126,20,.18),0 14px 40px rgba(253,126,20,.4)}
+/* outro */
+.logo{width:clamp(70px,11vmin,110px);height:clamp(70px,11vmin,110px);border-radius:28%;object-fit:cover;margin-bottom:3vmin}
+.cta{display:inline-block;margin-top:5vmin;padding:1.6vmin 3.4vmin;border-radius:99px;font-weight:700;font-size:clamp(14px,1.9vw,24px);color:var(--ink);text-decoration:none;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,.3))}
+.on .cta{animation:up 1s var(--ease) both,glow 2.4s ease-in-out 1.4s infinite alternate}
+@keyframes glow{to{box-shadow:inset 0 1.5px 0 #fff,0 18px 60px rgba(253,126,20,.5)}}
+#mark{position:absolute;left:24px;top:20px;font-family:'Instrument Serif',serif;font-size:22px;opacity:.6;z-index:2}
+#bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--o);z-index:2}
+@media(prefers-reduced-motion:reduce){.blob{animation:none}}
 </style>
 </head>
 <body>
-<svg width="0" height="0"><defs>
-<filter id="sketchy"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
-</defs></svg>
+<div id="stage">
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div id="mark">Time12</div><div id="bar"></div>
 
-<div id="frame"><div id="canvas">
-<div id="grain"></div>
-<div id="watermark">Time12</div>
-
-<!-- Scene 0: Problem -->
-<div class="scene" data-i="0" id="s1">
-  <h1 class="serif" style="font-size:clamp(20px,3.6vw,34px)">Notes here. Tasks there.<br>Time slipping through the cracks.</h1>
+<div class="scene">
+  <div class="chip glass" style="--x:10%;--y:16%;--rot:-6deg;--d:.1s">Idea?</div>
+  <div class="chip glass" style="--x:72%;--y:14%;--rot:5deg;--d:.25s">Call Sam</div>
+  <div class="chip glass" style="--x:16%;--y:70%;--rot:4deg;--d:.4s">Rent due</div>
+  <div class="chip glass" style="--x:64%;--y:72%;--rot:-4deg;--d:.55s">Meeting 3pm</div>
+  <div class="chip glass" style="--x:42%;--y:8%;--rot:3deg;--d:.7s">Buy milk</div>
+  <div class="chip glass" style="--x:80%;--y:44%;--rot:-5deg;--d:.85s">Q3 plan??</div>
+  <h1 class="r" style="--i:3">Notes here. Tasks there.<br>Time <i>slipping</i> away.</h1>
 </div>
 
-<!-- Scene 0.6: Clock -->
-<div class="scene" data-i="0.6">
-  <svg class="icon" width="140" height="140" viewBox="0 0 100 100">
-    <circle class="stroke draw" cx="50" cy="50" r="38" style="--dd:.1s"/>
-    <line class="stroke hourhand" x1="50" y1="50" x2="50" y2="30"/>
-    <line class="stroke minhand" x1="50" y1="50" x2="50" y2="18"/>
-  </svg>
-  <h1 class="serif" style="font-size:clamp(18px,3.2vw,30px);margin-top:5%">Your time is only<br>12 hours a day.</h1>
-  <p class="sub">Save it.</p>
+<div class="scene">
+  <div class="clock glass r"><i class="h"></i><i class="m"></i><b></b></div>
+  <h1 class="r" style="--i:2">Your day is only<br>12 hours.</h1>
+  <p class="sub r" style="--i:4">Make them count.</p>
 </div>
 
-<!-- Scene 0.5: What if -->
-<div class="scene" data-i="0.5">
-  <svg class="icon" width="52" height="64" viewBox="0 0 50 60">
-    <path class="stroke draw" d="M10 18 q0 -14 15 -14 q15 0 15 14 q0 10 -12 12 q-3 1 -3 8" style="--dd:.3s"/>
-    <circle cx="25" cy="50" r="3" style="fill:var(--ink)"/>
-  </svg>
-  <h1 class="serif" style="font-size:clamp(22px,3.8vw,36px);margin-top:4%">What if you had:</h1>
+<div class="scene">
+  <div class="glass r" style="width:clamp(90px,14vmin,140px);aspect-ratio:1;border-radius:32%;display:grid;place-items:center">
+    <svg viewBox="0 0 40 40" width="50%" fill="none" stroke="#5F7A3A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21l8 8 16-18"/></svg>
+  </div>
+  <h1 class="r" style="--i:2;margin-top:5vmin">One place for notes,<br>tasks &amp; time.</h1>
 </div>
 
-<!-- Scene 1: Solution -->
-<div class="scene" data-i="1">
-  <svg class="icon" width="130" height="100" viewBox="0 0 140 100">
-    <path class="stroke draw" d="M15 20 h80 v70 h-80 Z" style="--dd:.1s"/>
-    <path class="stroke draw" d="M15 20 l25 -14 h80 v70 l-25 14" style="--dd:.4s"/>
-    <path class="stroke draw" d="M32 55 l12 12 l26 -30" style="stroke:var(--green);--dd:1s"/>
-  </svg>
-  <h1 class="serif" style="font-size:clamp(20px,3.6vw,34px)">One place for notes,<br>tasks &amp; time.</h1>
-</div>
-
-<!-- Scene 2: Features -->
-<div class="scene" data-i="2">
-  <p class="hand" style="font-size:2vw;color:var(--orange2)">everything, organized</p>
+<div class="scene">
+  <p class="sub r">Everything, organized.</p>
   <div class="row">
-    <div class="card" style="--r:-3deg;--d:.1s"><svg width="46" height="46" viewBox="0 0 40 40"><path class="stroke draw" d="M8 6 h24 v28 h-24 Z M12 14 h16 M12 20 h16 M12 26 h10" style="--dd:.3s"/></svg><div class="lbl">Notes</div></div>
-    <div class="card" style="--r:2deg;--d:.3s"><svg width="46" height="46" viewBox="0 0 40 40"><rect class="stroke draw" x="7" y="7" width="26" height="26" rx="3" style="--dd:.5s"/><path class="stroke draw" d="M13 20 l5 5 l10 -12" style="--dd:.9s"/></svg><div class="lbl">Tasks</div></div>
-    <div class="card" style="--r:-2deg;--d:.5s"><svg width="46" height="46" viewBox="0 0 40 40"><circle class="stroke draw" cx="20" cy="13" r="6" style="--dd:.7s"/><path class="stroke draw" d="M8 33 q12 -14 24 0" style="--dd:1s"/></svg><div class="lbl">Org</div></div>
+    <div class="card glass r" style="--i:1"><svg viewBox="0 0 40 40"><path d="M9 6h22v28H9zM14 14h12M14 20h12M14 26h7"/></svg>Notes</div>
+    <div class="card glass r" style="--i:2"><svg viewBox="0 0 40 40"><rect x="7" y="7" width="26" height="26" rx="6"/><path d="M14 20l5 5 8-10"/></svg>Tasks</div>
+    <div class="card glass r" style="--i:3"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/><path d="M20 11v9l6 4"/></svg>Time</div>
   </div>
 </div>
 
-<!-- Scene 3: Team -->
-<div class="scene" data-i="3" id="s4">
-  <h1 class="serif" style="font-size:clamp(20px,3.4vw,30px)">Built for teams that<br>move together.</h1>
-  <img src="https://time12.xin/taiwan.png" style="width:60px;height:60px;margin-top:6%;margin-bottom:3%" alt="Time12"/>
-  <div style="position:relative;width:360px;height:100px;margin:0 auto" id="orgwrap"></div>
+<div class="scene">
+  <h1 class="r">Built for teams that<br>move together.</h1>
+  <div class="org">
+    <svg viewBox="0 0 560 180"><path style="--i:0" d="M60 120Q60 60 280 40"/><path style="--i:1" d="M170 120Q170 60 280 40"/><path style="--i:2" d="M280 120L280 40"/><path style="--i:3" d="M390 120Q390 60 280 40"/><path style="--i:4" d="M500 120Q500 60 280 40"/></svg>
+    <img class="dot glass hub lg" alt="Time12" style="left:50%;top:40px;--d:.2s">
+    <div class="dot glass" style="left:60px;top:130px;--d:.4s"></div>
+    <div class="dot glass" style="left:170px;top:130px;--d:.5s"></div>
+    <div class="dot glass" style="left:280px;top:130px;--d:.6s"></div>
+    <div class="dot glass" style="left:390px;top:130px;--d:.7s"></div>
+    <div class="dot glass" style="left:500px;top:130px;--d:.8s"></div>
+  </div>
 </div>
 
-<!-- Scene 4: Outro -->
-<div class="scene" data-i="4" id="s5">
-  <img src="https://time12.xin/taiwan.png" style="width:90px;height:90px;filter:url(#sketchy)" alt="Time12"/>
-  <h1 class="serif">Time12</h1>
-  <p class="sub">time12.xin</p>
-  <div class="paper" style="position:relative;margin-top:16px;padding:10px 22px;border-radius:6px;transform:rotate(-2deg)"><span class="hand" style="font-size:1.6vw;color:var(--ink)">Make Time True →</span></div>
+<div class="scene">
+  <img class="logo glass r lg" alt="Time12">
+  <h1 class="r" style="--i:1">Time12</h1>
+  <p class="sub r" style="--i:2">time12.xin</p>
+  <a class="cta glass" href="https://time12.xin">Make Time True</a>
 </div>
-
-</div></div>
-
+</div>
 <script>
-// scattered sticky notes for the "problem" scene
-const s1 = document.getElementById('s1');
-const notes = [['Idea?','#FFE9A8',12,18,-8,.1],['Call Sam','#FFC9C9',72,14,6,.2],['Rent due','#C9E7FF',22,60,4,.3],['Meeting 3pm','#D8F0C8',66,58,-5,.4],['Buy milk','#FFE9A8',44,10,3,.5],['Q3 plan??','#FFC9C9',80,66,-4,.6]];
-notes.forEach(([t,c,x,y,r,d])=>{
-  const n=document.createElement('div'); n.className='note';
-  n.style.cssText=`left:${x}%;top:${y}%;background:${c};--r:${r}deg;--d:${d}s`; n.textContent=t;
-  s1.appendChild(n);
-});
-// simple org chart: 6 paper "people" as 3 connected pairs, each pair connected to center logo
-const wrap = document.getElementById('orgwrap');
-wrap.innerHTML = `<svg width="360" height="100" viewBox="0 0 360 100" style="position:absolute;inset:0">
-<path class="stroke draw" d="M22 50 L80 50" style="stroke:var(--orange);--dd:.6s"/>
-<path class="stroke draw" d="M80 50 L180 0" style="stroke:var(--orange);--dd:.75s"/>
-<path class="stroke draw" d="M154 50 L214 50" style="stroke:var(--orange);--dd:.8s"/>
-<path class="stroke draw" d="M184 50 L180 0" style="stroke:var(--orange);--dd:.85s"/>
-<path class="stroke draw" d="M286 50 L348 50" style="stroke:var(--orange);--dd:.9s"/>
-<path class="stroke draw" d="M286 50 L180 0" style="stroke:var(--orange);--dd:.95s"/></svg>`;
-[[6,'.1s'],[64,'.2s'],[138,'.3s'],[198,'.4s'],[270,'.5s'],[332,'.6s']].forEach(([x,d])=>{
-  const p=document.createElement('div'); p.className='person';
-  p.style.cssText=`left:${x}px;top:27px;width:32px;height:46px;--d:${d}`; wrap.appendChild(p);
-});
-
-// timeline sequencer
-const scenes = [...document.querySelectorAll('.scene')];
-const DUR = 2500;
-let i = 0;
-scenes[0].classList.add('active');
-const timer = setInterval(()=>{
-  scenes[i].classList.remove('active');
-  i++;
-  if(i >= scenes.length){ clearInterval(timer); i = scenes.length-1; scenes[i].classList.add('active'); return; }
-  scenes[i].classList.add('active');
-}, DUR);
+const U=['https://time12.pages.dev/taiwan','https://time12.pages.dev/taiwan.png','https://time12.xin/taiwan.png'];
+document.querySelectorAll('.lg').forEach(im=>{let k=0;im.onerror=()=>{if(++k<U.length)im.src=U[k]};im.src=U[0]});
+const S=[...document.querySelectorAll('.scene')],D=2500,bar=document.getElementById('bar');
+let i=0;S[0].classList.add('on');
+bar.animate([{width:'0'},{width:'100%'}],{duration:D*S.length,easing:'linear',fill:'forwards'});
+const t=setInterval(()=>{
+  if(i>=S.length-1){clearInterval(t);return}
+  S[i].classList.remove('on');S[++i].classList.add('on');
+},D);
 </script>
 </body>
 </html>
