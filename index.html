@@ -34,12 +34,13 @@ p.hand{text-align:center;width:100%}
 .card .lbl{font-family:'DM Sans';font-weight:700;font-size:1.3vw;color:var(--ink)}
 .person{position:absolute;background:var(--orange);border:2px solid var(--ink);border-radius:50% 50% 45% 45%;filter:url(#sketchy);opacity:0;transform:scale(.5)}
 .scene.active .person{animation:pop .5s ease forwards var(--d,0s)}
-#bar{position:absolute;left:0;bottom:0;height:5px;background:var(--orange);width:0%}
 #watermark{position:absolute;top:14px;left:18px;font-family:'DM Serif Display';font-size:1.4vw;color:var(--ink);opacity:.55;letter-spacing:.5px}
-.confetti{position:absolute;width:10px;height:14px;background:var(--orange);opacity:0;top:-5%}
-.scene.active .confetti{animation:fall 3.4s linear forwards var(--d,0s)}
-@keyframes fall{0%{opacity:.9;transform:translateY(0) rotate(0)}100%{opacity:.2;transform:translateY(320px) rotate(300deg)}}
 .arrow{filter:url(#sketchy)}
+.hourhand,.minhand{transform-box:view-box;transform-origin:50px 50px}
+.scene.active .hourhand{animation:hourspin 2s linear .3s forwards}
+.scene.active .minhand{animation:minspin 2s linear .3s forwards}
+@keyframes hourspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes minspin{from{transform:rotate(0deg)}to{transform:rotate(4320deg)}}
 </style>
 </head>
 <body>
@@ -50,22 +51,34 @@ p.hand{text-align:center;width:100%}
 <div id="frame"><div id="canvas">
 <div id="grain"></div>
 <div id="watermark">Time12</div>
-<div id="bar"></div>
 
-<!-- Scene 0: Intro -->
-<div class="scene" data-i="0">
-  <img src="https://time12.xin/taiwan.png" style="width:110px;height:110px;filter:url(#sketchy)" alt="Time12"/>
-  <h1 class="serif">Time12</h1>
-  <p class="sub">— make time true —</p>
-</div>
-
-<!-- Scene 1: Problem -->
-<div class="scene" data-i="1" id="s1">
+<!-- Scene 0: Problem -->
+<div class="scene" data-i="0" id="s1">
   <h1 class="serif" style="font-size:clamp(20px,3.6vw,34px)">Notes here. Tasks there.<br>Time slipping through the cracks.</h1>
 </div>
 
-<!-- Scene 2: Solution -->
-<div class="scene" data-i="2">
+<!-- Scene 0.6: Clock -->
+<div class="scene" data-i="0.6">
+  <svg class="icon" width="140" height="140" viewBox="0 0 100 100">
+    <circle class="stroke draw" cx="50" cy="50" r="38" style="--dd:.1s"/>
+    <line class="stroke hourhand" x1="50" y1="50" x2="50" y2="30"/>
+    <line class="stroke minhand" x1="50" y1="50" x2="50" y2="18"/>
+  </svg>
+  <h1 class="serif" style="font-size:clamp(18px,3.2vw,30px);margin-top:5%">Your time is only<br>12 hours a day.</h1>
+  <p class="sub">Save it.</p>
+</div>
+
+<!-- Scene 0.5: What if -->
+<div class="scene" data-i="0.5">
+  <svg class="icon" width="52" height="64" viewBox="0 0 50 60">
+    <path class="stroke draw" d="M10 18 q0 -14 15 -14 q15 0 15 14 q0 10 -12 12 q-3 1 -3 8" style="--dd:.3s"/>
+    <circle cx="25" cy="50" r="3" style="fill:var(--ink)"/>
+  </svg>
+  <h1 class="serif" style="font-size:clamp(22px,3.8vw,36px);margin-top:4%">What if you had:</h1>
+</div>
+
+<!-- Scene 1: Solution -->
+<div class="scene" data-i="1">
   <svg class="icon" width="130" height="100" viewBox="0 0 140 100">
     <path class="stroke draw" d="M15 20 h80 v70 h-80 Z" style="--dd:.1s"/>
     <path class="stroke draw" d="M15 20 l25 -14 h80 v70 l-25 14" style="--dd:.4s"/>
@@ -74,8 +87,8 @@ p.hand{text-align:center;width:100%}
   <h1 class="serif" style="font-size:clamp(20px,3.6vw,34px)">One place for notes,<br>tasks &amp; time.</h1>
 </div>
 
-<!-- Scene 3: Features -->
-<div class="scene" data-i="3">
+<!-- Scene 2: Features -->
+<div class="scene" data-i="2">
   <p class="hand" style="font-size:2vw;color:var(--orange2)">everything, organized</p>
   <div class="row">
     <div class="card" style="--r:-3deg;--d:.1s"><svg width="46" height="46" viewBox="0 0 40 40"><path class="stroke draw" d="M8 6 h24 v28 h-24 Z M12 14 h16 M12 20 h16 M12 26 h10" style="--dd:.3s"/></svg><div class="lbl">Notes</div></div>
@@ -84,15 +97,15 @@ p.hand{text-align:center;width:100%}
   </div>
 </div>
 
-<!-- Scene 4: Team -->
-<div class="scene" data-i="4" id="s4">
+<!-- Scene 3: Team -->
+<div class="scene" data-i="3" id="s4">
   <h1 class="serif" style="font-size:clamp(20px,3.4vw,30px)">Built for teams that<br>move together.</h1>
   <img src="https://time12.xin/taiwan.png" style="width:60px;height:60px;margin-top:6%;margin-bottom:3%" alt="Time12"/>
   <div style="position:relative;width:360px;height:100px;margin:0 auto" id="orgwrap"></div>
 </div>
 
-<!-- Scene 5: Outro -->
-<div class="scene" data-i="5" id="s5">
+<!-- Scene 4: Outro -->
+<div class="scene" data-i="4" id="s5">
   <img src="https://time12.xin/taiwan.png" style="width:90px;height:90px;filter:url(#sketchy)" alt="Time12"/>
   <h1 class="serif">Time12</h1>
   <p class="sub">time12.xin</p>
@@ -110,13 +123,6 @@ notes.forEach(([t,c,x,y,r,d])=>{
   n.style.cssText=`left:${x}%;top:${y}%;background:${c};--r:${r}deg;--d:${d}s`; n.textContent=t;
   s1.appendChild(n);
 });
-// falling paper confetti for outro
-const s5 = document.getElementById('s5');
-for(let i=0;i<14;i++){
-  const c=document.createElement('div'); c.className='confetti';
-  c.style.cssText=`left:${5+i*7}%;background:${i%2?'var(--orange)':'var(--gold)'};--d:${i*0.15}s`;
-  s5.appendChild(c);
-}
 // simple org chart: 6 paper "people" as 3 connected pairs, each pair connected to center logo
 const wrap = document.getElementById('orgwrap');
 wrap.innerHTML = `<svg width="360" height="100" viewBox="0 0 360 100" style="position:absolute;inset:0">
@@ -136,8 +142,6 @@ const scenes = [...document.querySelectorAll('.scene')];
 const DUR = 2500;
 let i = 0;
 scenes[0].classList.add('active');
-document.getElementById('bar').style.transition = `width ${DUR*scenes.length}ms linear`;
-requestAnimationFrame(()=> document.getElementById('bar').style.width='100%');
 const timer = setInterval(()=>{
   scenes[i].classList.remove('active');
   i++;
