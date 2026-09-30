@@ -1,153 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Time12 — Make Time True</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#18120E;--paper:#F7F3EE;--paper2:#EFE9E1;--orange:#FD7E14;--orange2:#E56A10;--peach:#FFF4E5;--green:#5F7A3A;--gold:#B08832;}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;background:#0c0a08;overflow:hidden;font-family:'DM Sans',sans-serif}
-#frame{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-#canvas{position:relative;width:100%;height:100vh;max-width:none;background:var(--paper);border-radius:0;overflow:hidden;box-shadow:none}
-#grain{position:absolute;inset:0;opacity:.05;pointer-events:none;background-image:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E')}
-.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;visibility:hidden;transition:opacity .6s ease}
-.scene.active{opacity:1;visibility:visible}
-.serif{font-family:'DM Serif Display',serif}
-.hand{font-family:'Caveat',cursive}
-h1{font-size:clamp(28px,6vw,64px);color:var(--ink)}
-p.sub{font-family:'Caveat',cursive;font-weight:700;font-size:clamp(18px,3vw,30px);color:var(--orange2);margin-top:6px}
-.paper{position:absolute;background:var(--peach);border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(24,18,14,.15);filter:url(#sketchy)}
-.note{position:absolute;width:13%;aspect-ratio:1;padding:1%;font-family:'Caveat',cursive;font-weight:700;font-size:1.1vw;color:var(--ink);border:2px solid var(--ink);box-shadow:3px 4px 0 rgba(24,18,14,.18);filter:url(#sketchy);opacity:0;transform:scale(.4) rotate(0);display:flex;align-items:center;justify-content:center;text-align:center}
-.scene.active .note{animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards var(--d,0s)}
-@keyframes pop{to{opacity:1;transform:scale(1) rotate(var(--r,0deg))}}
-.icon{filter:url(#sketchy)}
-.stroke{fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.draw{stroke-dasharray:400;stroke-dashoffset:400;animation:draw 1.3s ease forwards var(--dd,.2s)}
-@keyframes draw{to{stroke-dashoffset:0}}
-.card{width:19%;aspect-ratio:.8;background:var(--peach);border:2px solid var(--ink);box-shadow:3px 5px 0 rgba(24,18,14,.18);filter:url(#sketchy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transform:translateY(40px) rotate(var(--r,0deg));padding:1%}
-.scene.active .card{animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards var(--d,0s)}
-@keyframes rise{to{opacity:1;transform:translateY(0) rotate(var(--r,0deg))}}
-.row{display:flex;gap:2.2%;margin:5% auto 0;width:66%;justify-content:center}
-p.hand{text-align:center;width:100%}
-.card .lbl{font-family:'DM Sans';font-weight:700;font-size:1.3vw;color:var(--ink)}
-.person{position:absolute;background:var(--orange);border:2px solid var(--ink);border-radius:50% 50% 45% 45%;filter:url(#sketchy);opacity:0;transform:scale(.5)}
-.scene.active .person{animation:pop .5s ease forwards var(--d,0s)}
-#watermark{position:absolute;top:14px;left:18px;font-family:'DM Serif Display';font-size:1.4vw;color:var(--ink);opacity:.55;letter-spacing:.5px}
-.arrow{filter:url(#sketchy)}
-.hourhand,.minhand{transform-box:view-box;transform-origin:50px 50px}
-.scene.active .hourhand{animation:hourspin 2s linear .3s forwards}
-.scene.active .minhand{animation:minspin 2s linear .3s forwards}
-@keyframes hourspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes minspin{from{transform:rotate(0deg)}to{transform:rotate(4320deg)}}
-</style>
-</head>
-<body>
-<svg width="0" height="0"><defs>
-<filter id="sketchy"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
-</defs></svg>
-
-<div id="frame"><div id="canvas">
-<div id="grain"></div>
-<div id="watermark">Time12</div>
-
-<!-- Scene 0: Problem -->
-<div class="scene" data-i="0" id="s1">
-  <h1 class="serif" style="font-size:clamp(20px,3.6vw,34px)">Notes here. Tasks there.<br>Time slipping through the cracks.</h1>
+:root{--bg:#000;--tx:#F5F5F5;--mu:#B5B5B5;--ac:#FD7E14;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-family:'DM Sans',system-ui,sans-serif}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+#wrap{width:min(100vw,calc((100dvh - 84px) * 16 / 9))}
+#v{display:block;width:100%;height:auto;cursor:pointer;background:#000}
+#bar{display:flex;align-items:center;gap:14px;padding:14px 12px 0}
+#pb{width:44px;height:44px;border-radius:50%;border:2px solid #2E2E2E;background:#0F0F0F;color:var(--tx);display:grid;place-items:center;cursor:pointer;flex:none}
+#pb:hover{border-color:var(--ac)}#pb:focus-visible,#sc:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+#sc{flex:1;accent-color:var(--ac);min-width:0}
+#tm{font-size:14px;color:var(--mu);font-variant-numeric:tabular-nums;flex:none}
+</style></head><body>
+<div id="wrap">
+<svg id="v" viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="30-second motion graphics film about Time12, a task management app for teams"></svg>
+<div id="bar"><button id="pb" aria-label="Play or pause"></button><input id="sc" type="range" min="0" max="30" step="0.01" value="0" aria-label="Timeline"><span id="tm">0:00 / 0:30</span></div>
 </div>
-
-<!-- Scene 0.6: Clock -->
-<div class="scene" data-i="0.6">
-  <svg class="icon" width="140" height="140" viewBox="0 0 100 100">
-    <circle class="stroke draw" cx="50" cy="50" r="38" style="--dd:.1s"/>
-    <line class="stroke hourhand" x1="50" y1="50" x2="50" y2="30"/>
-    <line class="stroke minhand" x1="50" y1="50" x2="50" y2="18"/>
-  </svg>
-  <h1 class="serif" style="font-size:clamp(18px,3.2vw,30px);margin-top:5%">Your time is only<br>12 hours a day.</h1>
-  <p class="sub">Save it.</p>
-</div>
-
-<!-- Scene 0.5: What if -->
-<div class="scene" data-i="0.5">
-  <svg class="icon" width="52" height="64" viewBox="0 0 50 60">
-    <path class="stroke draw" d="M10 18 q0 -14 15 -14 q15 0 15 14 q0 10 -12 12 q-3 1 -3 8" style="--dd:.3s"/>
-    <circle cx="25" cy="50" r="3" style="fill:var(--ink)"/>
-  </svg>
-  <h1 class="serif" style="font-size:clamp(22px,3.8vw,36px);margin-top:4%">What if you had:</h1>
-</div>
-
-<!-- Scene 1: Solution -->
-<div class="scene" data-i="1">
-  <svg class="icon" width="130" height="100" viewBox="0 0 140 100">
-    <path class="stroke draw" d="M15 20 h80 v70 h-80 Z" style="--dd:.1s"/>
-    <path class="stroke draw" d="M15 20 l25 -14 h80 v70 l-25 14" style="--dd:.4s"/>
-    <path class="stroke draw" d="M32 55 l12 12 l26 -30" style="stroke:var(--green);--dd:1s"/>
-  </svg>
-  <h1 class="serif" style="font-size:clamp(20px,3.6vw,34px)">One place for notes,<br>tasks &amp; time.</h1>
-</div>
-
-<!-- Scene 2: Features -->
-<div class="scene" data-i="2">
-  <p class="hand" style="font-size:2vw;color:var(--orange2)">everything, organized</p>
-  <div class="row">
-    <div class="card" style="--r:-3deg;--d:.1s"><svg width="46" height="46" viewBox="0 0 40 40"><path class="stroke draw" d="M8 6 h24 v28 h-24 Z M12 14 h16 M12 20 h16 M12 26 h10" style="--dd:.3s"/></svg><div class="lbl">Notes</div></div>
-    <div class="card" style="--r:2deg;--d:.3s"><svg width="46" height="46" viewBox="0 0 40 40"><rect class="stroke draw" x="7" y="7" width="26" height="26" rx="3" style="--dd:.5s"/><path class="stroke draw" d="M13 20 l5 5 l10 -12" style="--dd:.9s"/></svg><div class="lbl">Tasks</div></div>
-    <div class="card" style="--r:-2deg;--d:.5s"><svg width="46" height="46" viewBox="0 0 40 40"><circle class="stroke draw" cx="20" cy="13" r="6" style="--dd:.7s"/><path class="stroke draw" d="M8 33 q12 -14 24 0" style="--dd:1s"/></svg><div class="lbl">Org</div></div>
-  </div>
-</div>
-
-<!-- Scene 3: Team -->
-<div class="scene" data-i="3" id="s4">
-  <h1 class="serif" style="font-size:clamp(20px,3.4vw,30px)">Built for teams that<br>move together.</h1>
-  <img src="https://time12.xin/taiwan.png" style="width:60px;height:60px;margin-top:6%;margin-bottom:3%" alt="Time12"/>
-  <div style="position:relative;width:360px;height:100px;margin:0 auto" id="orgwrap"></div>
-</div>
-
-<!-- Scene 4: Outro -->
-<div class="scene" data-i="4" id="s5">
-  <img src="https://time12.xin/taiwan.png" style="width:90px;height:90px;filter:url(#sketchy)" alt="Time12"/>
-  <h1 class="serif">Time12</h1>
-  <p class="sub">time12.xin</p>
-  <div class="paper" style="position:relative;margin-top:16px;padding:10px 22px;border-radius:6px;transform:rotate(-2deg)"><span class="hand" style="font-size:1.6vw;color:var(--ink)">Make Time True →</span></div>
-</div>
-
-</div></div>
-
 <script>
-// scattered sticky notes for the "problem" scene
-const s1 = document.getElementById('s1');
-const notes = [['Idea?','#FFE9A8',12,18,-8,.1],['Call Sam','#FFC9C9',72,14,6,.2],['Rent due','#C9E7FF',22,60,4,.3],['Meeting 3pm','#D8F0C8',66,58,-5,.4],['Buy milk','#FFE9A8',44,10,3,.5],['Q3 plan??','#FFC9C9',80,66,-4,.6]];
-notes.forEach(([t,c,x,y,r,d])=>{
-  const n=document.createElement('div'); n.className='note';
-  n.style.cssText=`left:${x}%;top:${y}%;background:${c};--r:${r}deg;--d:${d}s`; n.textContent=t;
-  s1.appendChild(n);
-});
-// simple org chart: 6 paper "people" as 3 connected pairs, each pair connected to center logo
-const wrap = document.getElementById('orgwrap');
-wrap.innerHTML = `<svg width="360" height="100" viewBox="0 0 360 100" style="position:absolute;inset:0">
-<path class="stroke draw" d="M22 50 L80 50" style="stroke:var(--orange);--dd:.6s"/>
-<path class="stroke draw" d="M80 50 L180 0" style="stroke:var(--orange);--dd:.75s"/>
-<path class="stroke draw" d="M154 50 L214 50" style="stroke:var(--orange);--dd:.8s"/>
-<path class="stroke draw" d="M184 50 L180 0" style="stroke:var(--orange);--dd:.85s"/>
-<path class="stroke draw" d="M286 50 L348 50" style="stroke:var(--orange);--dd:.9s"/>
-<path class="stroke draw" d="M286 50 L180 0" style="stroke:var(--orange);--dd:.95s"/></svg>`;
-[[6,'.1s'],[64,'.2s'],[138,'.3s'],[198,'.4s'],[270,'.5s'],[332,'.6s']].forEach(([x,d])=>{
-  const p=document.createElement('div'); p.className='person';
-  p.style.cssText=`left:${x}px;top:27px;width:32px;height:46px;--d:${d}`; wrap.appendChild(p);
-});
-
-// timeline sequencer
-const scenes = [...document.querySelectorAll('.scene')];
-const DUR = 2500;
-let i = 0;
-scenes[0].classList.add('active');
-const timer = setInterval(()=>{
-  scenes[i].classList.remove('active');
-  i++;
-  if(i >= scenes.length){ clearInterval(timer); i = scenes.length-1; scenes[i].classList.add('active'); return; }
-  scenes[i].classList.add('active');
-}, DUR);
-</script>
-</body>
-</html>
+const NS='http://www.w3.org/2000/svg',$=s=>document.querySelector(s),svg=$('#v');
+function E(tag,a,par,txt){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;(par||svg).appendChild(e);return e}
+const S=(e,k,v)=>e.setAttribute(k,v),cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),p=(t,a,b)=>cl((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,4),eio=x=>x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2,eb=x=>1+2.70158*Math.pow(x-1,3)+1.70158*Math.pow(x-1,2);
+const AC='#FD7E14',TX='#F5F5F5',MU='#B5B5B5',DM='#6B6B6B',SF='#0F0F0F',S2='#1A1A1A',BD='#2E2E2E',OK='#7AB560',BAD='#D97060',WARN='#FFA45C';
+const SERIF="'DM Serif Display',Georgia,serif",SANS="'DM Sans',system-ui,sans-serif";
+const T=(par,x,y,s,size,fill,ex)=>E('text',Object.assign({x,y,'font-size':size,fill,'font-family':SANS},ex||{}),par,s);
+const pop=(o,k)=>{S(o.c,'transform',`translate(${o.cx} ${o.cy}) scale(${Math.max(k,.001)}) translate(${-o.cx} ${-o.cy})`);S(o.c,'opacity',cl(k*1.5))};
+const defs=E('defs',{});E('rect',{width:1600,height:900,fill:'#000'});
+const dial=E('circle',{cx:800,cy:450,r:640,fill:'none',stroke:'#131313','stroke-width':26,'stroke-dasharray':'3 30.51'});
+/* icons and parts */
+function person(par,x,y,s=1){const g=E('g',{transform:`translate(${x} ${y}) scale(${s})`,fill:'none',stroke:TX,'stroke-width':3,'stroke-linecap':'round'},par);E('circle',{cx:0,cy:-8,r:9},g);E('path',{d:'M-18 20a18 16 0 0 1 36 0'},g);return g}
+function avatar(par,x,y,r){const g=E('g',{},par);E('circle',{cx:x,cy:y,r,fill:S2,stroke:BD,'stroke-width':2},g);person(g,x,y,r/38);return g}
+const clock=(c,x,y)=>{const g=E('g',{transform:`translate(${x} ${y})`,fill:'none',stroke:MU,'stroke-width':3,'stroke-linecap':'round'},c);E('circle',{r:12},g);E('path',{d:'M0 -6V0l5 3'},g)};
+const linkI=(c,x,y)=>E('path',{d:'M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1',transform:`translate(${x-16} ${y-16}) scale(1.35)`,fill:'none',stroke:MU,'stroke-width':2,'stroke-linecap':'round'},c);
+const card=(g,x,y,w,h)=>E('rect',{x,y,width:w,height:h,rx:20,fill:SF,stroke:BD,'stroke-width':2},g);
+function chip(g,x,y,w,label,ic){const c=E('g',{},g);E('rect',{x,y,width:w,height:52,rx:26,fill:S2,stroke:BD,'stroke-width':2},c);if(ic)ic(c,x+32,y+26);T(c,x+(ic?60:26),y+34,label,24,TX);return{c,cx:x+w/2,cy:y+26}}
+function btn(g,x,y,w,h,label,fill,stroke,tc,fs=26){const c=E('g',{},g);E('rect',{x,y,width:w,height:h,rx:h/2,fill,stroke,'stroke-width':2},c);T(c,x+w/2,y+h/2+fs*.35,label,fs,tc,{'text-anchor':'middle','font-weight':700});return{c,cx:x+w/2,cy:y+h/2}}
+let cid=0;
+function head(g,lines,sub){const y0=330;const its=lines.map((s,i)=>{const id='c'+cid++,cp=E('clipPath',{id},defs);E('rect',{x:100,y:y0+i*95-75,width:720,height:100},cp);return T(E('g',{'clip-path':`url(#${id})`},g),120,y0+i*95,s,88,TX,{'font-family':SERIF})});
+ const st=sub.map((s,i)=>T(g,122,y0+lines.length*95+30+i*44,s,30,MU));
+ return u=>{its.forEach((t,i)=>S(t,'transform',`translate(0 ${(1-eo(p(u,.3+i*.18,1+i*.18)))*110})`));st.forEach((s,i)=>{const k=eo(p(u,1.1+i*.15,1.7+i*.15));S(s,'opacity',k);S(s,'transform',`translate(${(1-k)*30} 0)`)})}}
+/* scenes 1 and 6: brand */
+function brand(g,n){const cx=470,cy=450,R=190,C=2*Math.PI*R;
+ E('circle',{cx,cy,r:R-12,fill:SF},g);
+ const ring=E('circle',{cx,cy,r:R,fill:'none',stroke:AC,'stroke-width':10,'stroke-linecap':'round','stroke-dasharray':C,transform:`rotate(-90 ${cx} ${cy})`},g);
+ const ticks=[...Array(12)].map((_,i)=>{const a=i*Math.PI/6,r1=R-34,r2=R-(i%3?54:70);return E('line',{x1:cx+Math.sin(a)*r1,y1:cy-Math.cos(a)*r1,x2:cx+Math.sin(a)*r2,y2:cy-Math.cos(a)*r2,stroke:i%3?MU:TX,'stroke-width':i%3?4:7,'stroke-linecap':'round'},g)});
+ const hand=E('line',{x1:cx,y1:cy,x2:cx,y2:cy-R+78,stroke:TX,'stroke-width':10,'stroke-linecap':'round'},g),hub=E('circle',{r:16,fill:AC},g);
+ const cp=E('clipPath',{id:'cb'+n},defs);E('rect',{x:790,y:290,width:790,height:300},cp);const cg=E('g',{'clip-path':`url(#cb${n})`},g);
+ const nm=T(cg,800,470,'Time12',170,TX,{'font-family':SERIF}),tg=T(cg,806,548,'Make Time True',46,AC,{'font-weight':700});
+ const sb=T(g,808,612,'Assign work. Review it. Keep every deadline.',30,MU),st=T(g,808,690,'Notes, shortcuts, and a theme for day or night.',28,MU);
+ return(u,k2)=>{S(ring,'stroke-dashoffset',C*(1-eo(p(u,.2,1.6))));ticks.forEach((t,i)=>S(t,'opacity',p(u,.5+i*.05,.8+i*.05)));
+  S(hand,'transform',`rotate(${-230*(1-eb(p(u,1,2.4)))} ${cx} ${cy})`);S(hub,'transform',`translate(${cx} ${cy}) scale(${Math.max(eb(p(u,.4,.9)),.001)})`);
+  S(nm,'transform',`translate(0 ${(1-eo(p(u,1.9,2.7)))*220})`);S(tg,'transform',`translate(0 ${(1-eo(p(u,2.5,3.2)))*90})`);
+  const a=eo(p(u,3.1,3.7));S(sb,'opacity',a);S(sb,'transform',`translate(${(1-a)*30} 0)`);S(st,'opacity',eo(k2))}}
+/* scene 2: assign */
+function s2(g){const H=head(g,['Assign work','in seconds.'],['Create a task, pick a group,','and set the deadline.']);
+ const K=E('g',{},g);card(K,830,170,610,330);T(K,865,226,'New task',24,DM);
+ const ttl=T(K,865,300,'',44,TX,{'font-weight':700}),cur=E('rect',{y:264,width:4,height:46,fill:AC},K);
+ E('line',{x1:865,y1:322,x2:1405,y2:322,stroke:BD,'stroke-width':2},K);
+ const c1=chip(K,865,352,210,'Engineering',(c,x,y)=>person(c,x,y+2,.55)),c2=chip(K,1095,352,240,'Fri, 5:00 PM',clock),b=btn(K,1265,432,150,52,'Assign',AC,AC,'#000');
+ const X=[900,1130,1360],nms=['Aisha','Omar','Lena'];
+ const rg=X.map((x,i)=>{avatar(g,x,650,38);T(g,x,725,nms[i],26,TX,{'text-anchor':'middle'});return E('circle',{cx:x,cy:650,r:38,fill:'none',stroke:AC,'stroke-width':4,opacity:0},g)});
+ const pl=X.map(x=>btn(g,x-70,745,140,40,'Assigned','#3A1F0A','#3A1F0A',AC,22));
+ const tk=X.map(()=>{const k=E('g',{},g);E('rect',{x:-28,y:-20,width:56,height:40,rx:8,fill:AC},k);E('path',{d:'M-14 -6h28M-14 6h18',stroke:'#000','stroke-width':4,'stroke-linecap':'round'},k);return k});
+ return u=>{H(u);const n=Math.floor(p(u,.4,1.7)*16);ttl.textContent='Finish Q3 report'.slice(0,n);
+  S(cur,'x',865+ttl.getComputedTextLength()+6);S(cur,'opacity',u>.35&&u<3.2&&(u*2)%1<.6?1:0);
+  pop(c1,eb(p(u,1.8,2.3)));pop(c2,eb(p(u,2.3,2.8)));pop(b,eb(p(u,2.7,3.1))*(1-.06*Math.sin(Math.PI*p(u,3.4,3.65))));
+  S(K,'opacity',1-.6*p(u,3.7,4.3));
+  X.forEach((ax,i)=>{const q=eio(p(u,3.6+i*.2,4.4+i*.2)),x=1340+(ax-1340)*q,y=456+144*q-70*Math.sin(Math.PI*q);
+   S(tk[i],'transform',`translate(${x} ${y}) rotate(${-12*(1-q)}) scale(${1-.3*q})`);S(tk[i],'opacity',q>0&&q<.97?1:0);
+   const a=p(u,4.4+i*.2,4.8+i*.2);pop(pl[i],eb(a));S(rg[i],'r',38+40*a);S(rg[i],'opacity',a>0&&a<1?1-a:0)})}}
+/* scene 3: review */
+function s3(g){const H=head(g,['Members submit.','You decide.'],['Text and links come in.','Approve or reject with one click.']);
+ card(g,820,170,620,420);const glow=E('rect',{x:820,y:170,width:620,height:420,rx:20,fill:'none',stroke:OK,'stroke-width':4,opacity:0},g);
+ avatar(g,885,240,34);T(g,935,238,'Omar',32,TX,{'font-weight':700});T(g,935,274,'Finish Q3 report',22,MU);
+ const pend={c:E('g',{},g),cx:1330,cy:238};E('rect',{x:1260,y:216,width:140,height:44,rx:22,fill:'#2A1A08'},pend.c);T(pend.c,1330,246,'Pending',22,WARN,{'text-anchor':'middle','font-weight':700});
+ const done={c:E('g',{},g),cx:1325,cy:238};E('rect',{x:1230,y:216,width:190,height:44,rx:22,fill:'#16220F',stroke:OK,'stroke-width':2},done.c);
+ const ck=E('path',{d:'M1256 239l6 6 12-13',fill:'none',stroke:OK,'stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round',pathLength:1,'stroke-dasharray':1},done.c);T(done.c,1350,246,'Completed',22,OK,{'text-anchor':'middle','font-weight':700});
+ const tx=T(g,865,350,'',30,TX),lk=chip(g,865,382,350,'drive.link/q3-report',linkI);
+ const rj=btn(g,865,500,200,56,'Reject','none',BAD,BAD),ap=btn(g,1095,500,200,56,'Approve',OK,OK,'#000');
+ const rip=E('circle',{cx:1195,cy:528,r:0,fill:'none',stroke:OK,'stroke-width':4,opacity:0},g);
+ const cu=E('path',{d:'M0 0L0 30L8 23L14 36L20 33L14 21L25 21Z',fill:TX,stroke:'#000','stroke-width':2},g);
+ return u=>{H(u);tx.textContent='Draft is ready for review.'.slice(0,Math.floor(p(u,.4,1.5)*26));
+  pop(lk,eb(p(u,1.6,2.1)));pop(rj,eb(p(u,2.1,2.5)));pop(ap,eb(p(u,2.3,2.7))*(1-.06*Math.sin(Math.PI*p(u,3.7,3.9))));
+  const m=eio(p(u,2.7,3.6));S(cu,'transform',`translate(${1430+(1180-1430)*m} ${720+(520-720)*m})`);S(cu,'opacity',p(u,2.5,2.8)*(1-p(u,4.6,5))); 
+  const r=p(u,3.7,4.3);S(rip,'r',90*r);S(rip,'opacity',r>0&&r<1?1-r:0);
+  pop(pend,1-p(u,3.9,4.15));pop(done,eb(p(u,4.1,4.5)));S(ck,'stroke-dashoffset',1-p(u,4.2,4.7));
+  S(glow,'opacity',p(u,4.1,4.6));S(rj.c,'opacity',1-.7*p(u,4.1,4.5))}}
+/* scene 4: import and groups */
+function s4(g){const H=head(g,['Whole teams,','one import.'],['Add accounts one by one, or bring in','a CSV and sort them into groups.']);
+ card(g,790,190,300,440);E('path',{d:'M-12 -16h16l8 8v24h-24zM4 -16v8h8',transform:'translate(830 246)',fill:'none',stroke:MU,'stroke-width':3,'stroke-linejoin':'round'},g);
+ T(g,862,254,'team.csv',26,TX,{'font-weight':700});T(g,820,312,'group,username',20,DM);
+ const gs=['Engineering','Design'],cnt=[];
+ gs.forEach((n,i)=>{const y=190+i*240;card(g,1170,y,320,200);T(g,1198,y+52,n,30,TX,{'font-weight':700});cnt.push(T(g,1198,y+86,'0 members',22,MU));
+  [0,1,2].forEach(s=>E('circle',{cx:1222+68*s,cy:y+140,r:24,fill:'none',stroke:BD,'stroke-width':2,'stroke-dasharray':'5 6'},g))});
+ const rows=['Engineering,aisha','Engineering,omar','Engineering,noor','Design,lena','Design,ravi','Design,mia'].map((s,i)=>{
+  const gi=i<3?0:1,sx=1222+68*(i%3),sy=gi?570:330,cx=940,cy=358+i*46;
+  const r=E('g',{},g);E('rect',{x:815,y:340+i*46,width:250,height:36,rx:10,fill:S2},r);T(r,830,365+i*46,s,20,TX);
+  const d=E('g',{},g);E('circle',{cx:0,cy:0,r:24,fill:S2,stroke:OK,'stroke-width':2},d);person(d,0,0,.6);return{r,d,gi,sx,sy,cx,cy}});
+ return u=>{H(u);const n=[0,0];
+  rows.forEach((o,i)=>{const q=eio(p(u,1+i*.4,1.8+i*.4)),k=1-.85*q;
+   S(o.r,'transform',`translate(${o.cx+(o.sx-o.cx)*q} ${o.cy+(o.sy-o.cy)*q}) scale(${k}) translate(${-o.cx} ${-o.cy})`);S(o.r,'opacity',1-p(q,.6,.95));
+   const a=eb(p(q,.8,1));S(o.d,'transform',`translate(${o.sx} ${o.sy}) scale(${Math.max(a,.001)})`);if(q>=1)n[o.gi]++});
+  n.forEach((c,i)=>cnt[i].textContent=c+(c==1?' member':' members'))}}
+/* scene 5: performance */
+function s5(g){const H=head(g,['Watch progress','as it happens.'],['Every task is tracked as pending,','completed, or overdue.']);
+ card(g,790,170,700,480);T(g,830,238,'Task volume over time',30,TX,{'font-weight':700});
+ const num=T(g,1450,268,'0',68,AC,{'font-family':SERIF,'text-anchor':'end'});T(g,1450,300,'tasks completed',22,MU,{'text-anchor':'end'});
+ E('line',{x1:830,y1:600,x2:1460,y2:600,stroke:BD,'stroke-width':2},g);
+ const Hs=[80,130,105,175,160,225,205,270],bars=Hs.map((h,i)=>E('rect',{x:850+i*74,width:46,rx:6,fill:i==7?TX:AC,opacity:.9},g));
+ const pts=Hs.map((h,i)=>[873+i*74,600-h-22]),line=E('path',{d:'M'+pts.map(q=>q.join(' ')).join('L'),fill:'none',stroke:TX,'stroke-width':4,'stroke-linejoin':'round','stroke-linecap':'round',pathLength:1,'stroke-dasharray':1},g);
+ const dots=pts.map(q=>E('circle',{cx:q[0],cy:q[1],r:7,fill:TX},g));
+ return u=>{H(u);Hs.forEach((h,i)=>{const v=h*eo(p(u,.5+i*.15,1.2+i*.15));S(bars[i],'y',600-v);S(bars[i],'height',v)});
+  const l=p(u,1.5,2.8);S(line,'stroke-dashoffset',1-l);dots.forEach((d,i)=>S(d,'opacity',l>=i/7?1:0));num.textContent=Math.round(42*eo(p(u,.6,3)))}}
+/* assemble */
+const mk=()=>E('g',{}),g1=mk(),g2=mk(),g3=mk(),g4=mk(),g5=mk(),g6=mk();
+const b1=brand(g1,1),b6=brand(g6,6),u2=s2(g2),u3=s3(g3),u4=s4(g4),u5=s5(g5);
+const SC=[[0,5.5,g1,u=>b1(u,0)],[5.5,11.5,g2,u2],[11.5,17.5,g3,u3],[17.5,22.5,g4,u4],[22.5,27,g5,u5],[27,30.01,g6,u=>b6(u*1.5+.8,p(u,1.6,2.2))]];
+const pg=E('g',{});E('circle',{cx:1490,cy:88,r:34,fill:'none',stroke:BD,'stroke-width':6},pg);
+const parc=E('circle',{cx:1490,cy:88,r:34,fill:'none',stroke:AC,'stroke-width':6,'stroke-linecap':'round',transform:'rotate(-90 1490 88)'},pg),phand=E('line',{x1:1490,y1:88,x2:1490,y2:62,stroke:TX,'stroke-width':4,'stroke-linecap':'round'},pg);
+E('circle',{cx:1490,cy:88,r:5,fill:AC},pg);T(pg,120,820,'Time12',40,TX,{'font-family':SERIF});
+const B=[5.5,11.5,17.5,22.5,27],w2=E('path',{fill:AC}),w1=E('path',{fill:TX});
+function wipe(t,lag,el){let x=-2000;for(const b of B){const d=t-b-lag;if(d>-.5&&d<.5)x=d<0?-2000+2000*eio(p(d,-.5,0)):2000*eio(p(d,0,.5))}S(el,'d',`M${x} 0H${x+2000}L${x+1780} 900H${x}Z`)}
+/* transport */
+const pb=$('#pb'),sc=$('#sc'),tm=$('#tm');let t=0,play=true,last=performance.now();
+const IC={play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',pause:'<path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/>',replay:'<path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'};
+function render(){S(dial,'transform',`rotate(${t*2} 800 450)`);
+ SC.forEach(s=>{const on=t>=s[0]&&t<s[1];s[2].style.display=on?'':'none';if(on)s[3](t-s[0])});
+ const on=t>=5.5&&t<27;S(pg,'opacity',on?1:0);S(parc,'stroke-dasharray',`${213.6*t/30} 214`);S(phand,'transform',`rotate(${t/30*360} 1490 88)`);
+ wipe(t,0,w2);wipe(t,.12,w1);sc.value=t;const s=Math.floor(t);tm.textContent=`0:${String(s).padStart(2,'0')} / 0:30`;
+ pb.innerHTML=`<svg width="22" height="22" viewBox="0 0 24 24">${IC[play?'pause':t>=30?'replay':'play']}</svg>`}
+function tog(){if(t>=30){t=0;play=true}else play=!play}
+pb.onclick=tog;svg.onclick=tog;sc.oninput=()=>{t=+sc.value;play=false};
+addEventListener('keydown',e=>{if(e.code==='Space'&&e.target!==sc){e.preventDefault();tog()}});
+function tick(n){const dt=(n-last)/1000;last=n;if(play){t+=Math.min(dt,.1);if(t>=30){t=30;play=false}}render();requestAnimationFrame(tick)}
+render();requestAnimationFrame(tick);
+</script></body></html>
